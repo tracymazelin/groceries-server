@@ -2,7 +2,6 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var cors = require('cors');
@@ -10,50 +9,48 @@ var cors = require('cors');
 // Configuration
 mongoose.connect('mongodb://localhost/groceries');
 
-app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({'extended': 'true'}));
+app.use(bodyParser.urlencoded({ 'extended': 'true' }));
 app.use(bodyParser.json());
-app.use(bodyParser.json({type: 'application/vnd.api+json'}));
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(methodOverride());
 app.use(cors());
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'DELETE, PUT');
+    res.header('Access-Control-Allow-Methods', 'DELETE, POST, PUT');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
-// Models
+// Model
 var Grocery = mongoose.model('Grocery', {
     name: String,
     quantity: Number
 });
 
-// Routes
 
-// Get groceries
+// Get all grocery items
 app.get('/api/groceries', function (req, res) {
 
-    console.log("fetching groceries");
+    console.log("Listing groceries items...");
 
-    // use mongoose to get all groceries in the database
+    //use mongoose to get all groceries in the database
     Grocery.find(function (err, groceries) {
 
         // if there is an error retrieving, send the error. nothing after res.send(err) will execute
-        if (err)
+        if (err) {
             res.send(err);
+        }
 
         res.json(groceries); // return all groceries in JSON format
     });
 });
 
-// create review and send back all groceries after creation
+// Create a grocery Item
 app.post('/api/groceries', function (req, res) {
 
-    console.log("creating review");
+    console.log("Creating grocery item...");
 
-    // create a review, information comes from request from Ionic
     Grocery.create({
         name: req.body.name,
         quantity: req.body.quantity,
@@ -62,7 +59,7 @@ app.post('/api/groceries', function (req, res) {
         if (err)
             res.send(err);
 
-        // get and return all the groceries after you create another
+        // create and return all the groceries
         Grocery.find(function (err, groceries) {
             if (err)
                 res.send(err);
@@ -72,16 +69,32 @@ app.post('/api/groceries', function (req, res) {
 
 });
 
-// delete a review
-app.delete('/api/groceries/:grocery_id', function (req, res) {
+// Update a grocery Item
+app.put('/api/groceries/:id', function (req, res) {
+    const grocery = {
+        name: req.body.name,
+        quantity: req.body.quantity
+    };
+    console.log("Updating item - ", req.params.id);
+    Grocery.update({ _id: req.params.id }, grocery, function (err, raw) {
+        if (err) {
+            res.send(err);
+        }
+        res.send(raw);
+    });
+});
+
+
+// Delete a grocery Item
+app.delete('/api/groceries/:id', function (req, res) {
     Grocery.remove({
-        _id: req.params.grocery_id
+        _id: req.params.id
     }, function (err, grocery) {
         console.error("Error deleting grocery ", err);
     });
 });
 
 
-// listen (start app with node server.js) ======================================
+// Start app and listen on port 8080  
 app.listen(8080);
-console.log("App listening on port 8080");
+console.log("Grocery server listening on port 8080");
