@@ -2,7 +2,7 @@
 
 ### Express based REST server for serving MongoDB content using Mongoose node module
 
-###Steps to run this code
+### Steps to run this code
 
 1. Run `npm install` to install all required modules
 2. Run `mongod` to start the MongoDB server process
