@@ -10,6 +10,6 @@
 4. Run `npm start` to start the server
 5. If everything went right, you should see a message saying that the server was started and listenig on some port...
 
-#### Useful Link
+#### Useful Links
 * MongoDB installation manual - https://docs.mongodb.com/manual/installation/
 * Mongoose Node Module - http://mongoosejs.com/
