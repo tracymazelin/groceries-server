@@ -90,7 +90,16 @@ app.delete('/api/groceries/:id', function (req, res) {
     Grocery.remove({
         _id: req.params.id
     }, function (err, grocery) {
-        console.error("Error deleting grocery ", err);
+        if (err) {
+            console.error("Error deleting grocery ", err);
+        }
+        else {
+            Grocery.find(function (err, groceries) {
+                if (err)
+                    res.send(err);
+                res.json(groceries);
+            });    
+        }
     });
 });
 
