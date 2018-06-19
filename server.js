@@ -9,9 +9,9 @@ var cors = require('cors');
 // Configuration
 mongoose.connect('mongodb://localhost/groceries');
 
-app.use(bodyParser.urlencoded({ 'extended': 'true' }));
+app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
-app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 app.use(methodOverride());
 app.use(cors());
 
@@ -56,8 +56,9 @@ app.post('/api/groceries', function (req, res) {
         quantity: req.body.quantity,
         done: false
     }, function (err, grocery) {
-        if (err)
+        if (err) {
             res.send(err);
+        }
 
         // create and return all the groceries
         Grocery.find(function (err, groceries) {
@@ -76,7 +77,7 @@ app.put('/api/groceries/:id', function (req, res) {
         quantity: req.body.quantity
     };
     console.log("Updating item - ", req.params.id);
-    Grocery.update({ _id: req.params.id }, grocery, function (err, raw) {
+    Grocery.update({_id: req.params.id}, grocery, function (err, raw) {
         if (err) {
             res.send(err);
         }
@@ -95,10 +96,13 @@ app.delete('/api/groceries/:id', function (req, res) {
         }
         else {
             Grocery.find(function (err, groceries) {
-                if (err)
+                if (err) {
                     res.send(err);
-                res.json(groceries);
-            });    
+                }
+                else {
+                    res.json(groceries);
+                }
+            });
         }
     });
 });
