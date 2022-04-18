@@ -6,6 +6,12 @@ curl --header "Content-Type: application/json" \
   --data '{"name":"Bread","quantity":"2"}' \
   http://localhost:8080/api/groceries
 
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"name":"Bananas","quantity":"6"}' \
+  http://localhost:8080/api/groceries
+
 # Update item
 curl --header "Content-Type: application/json" \
   --request PUT \
@@ -17,3 +23,8 @@ curl --header "Content-Type: application/json" \
 curl --header "Content-Type: application/json" \
   --request DELETE \
   http://localhost:8080/api/groceries/{id}   
+
+   # Update item
+curl --header "Content-Type: application/json" \
+  --request DELETE \
+  http://localhost:8080/api/groceries/625b7f4244d2a49c650119d5 

@@ -9,13 +9,13 @@ var cors = require('cors');
 // Configuration
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/groceries");
 
-app.use(bodyParser.urlencoded({'extended': 'true'}));
+app.use(bodyParser.urlencoded({ 'extended': 'true' }));
 app.use(bodyParser.json());
-app.use(bodyParser.json({type: 'application/vnd.api+json'}));
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(methodOverride());
 app.use(cors());
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'DELETE, POST, PUT');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -30,12 +30,12 @@ var Grocery = mongoose.model('Grocery', {
 
 
 // Get all grocery items
-app.get('/api/groceries', function (req, res) {
+app.get('/api/groceries', function(req, res) {
 
     console.log("Listing groceries items...");
 
     //use mongoose to get all groceries in the database
-    Grocery.find(function (err, groceries) {
+    Grocery.find(function(err, groceries) {
 
         // if there is an error retrieving, send the error. nothing after res.send(err) will execute
         if (err) {
@@ -46,8 +46,22 @@ app.get('/api/groceries', function (req, res) {
     });
 });
 
+// Get a single grocery item
+// app.get('/api/groceries/:id', function(req, res) {
+
+//     console.log("Get a grocery item...");
+
+//     //use mongoose to get all groceries in the database
+//     Grocery.find({ _id: req.params.id }, function(err, raw) {
+//         if (err) {
+//             res.send(err);
+//         }
+//         res.send(raw);
+//     });
+// });
+
 // Create a grocery Item
-app.post('/api/groceries', function (req, res) {
+app.post('/api/groceries', function(req, res) {
 
     console.log("Creating grocery item...");
 
@@ -55,13 +69,13 @@ app.post('/api/groceries', function (req, res) {
         name: req.body.name,
         quantity: req.body.quantity,
         done: false
-    }, function (err, grocery) {
+    }, function(err, grocery) {
         if (err) {
             res.send(err);
         }
 
         // create and return all the groceries
-        Grocery.find(function (err, groceries) {
+        Grocery.find(function(err, groceries) {
             if (err)
                 res.send(err);
             res.json(groceries);
@@ -71,13 +85,13 @@ app.post('/api/groceries', function (req, res) {
 });
 
 // Update a grocery Item
-app.put('/api/groceries/:id', function (req, res) {
+app.put('/api/groceries/:id', function(req, res) {
     const grocery = {
         name: req.body.name,
         quantity: req.body.quantity
     };
     console.log("Updating item - ", req.params.id);
-    Grocery.update({_id: req.params.id}, grocery, function (err, raw) {
+    Grocery.update({ _id: req.params.id }, grocery, function(err, raw) {
         if (err) {
             res.send(err);
         }
@@ -87,19 +101,17 @@ app.put('/api/groceries/:id', function (req, res) {
 
 
 // Delete a grocery Item
-app.delete('/api/groceries/:id', function (req, res) {
+app.delete('/api/groceries/:id', function(req, res) {
     Grocery.remove({
         _id: req.params.id
-    }, function (err, grocery) {
+    }, function(err, grocery) {
         if (err) {
             console.error("Error deleting grocery ", err);
-        }
-        else {
-            Grocery.find(function (err, groceries) {
+        } else {
+            Grocery.find(function(err, groceries) {
                 if (err) {
                     res.send(err);
-                }
-                else {
+                } else {
                     res.json(groceries);
                 }
             });
